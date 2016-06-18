@@ -93,7 +93,7 @@ class VegProdSpider(scrapy.Spider):
             
     #確認資訊更新時間
     def check_update_time(self, veg_data, transcation_date):
-        if os.path.exists(UPDTAE_FILE_LOG):
+        if os.path.exists(self.UPDTAE_FILE_LOG):
             text_file = codecs.open('update_time.txt', 'r', 'utf-8')
             if unicode(str(transcation_date),'utf-8') == unicode(text_file.readlines()[0].encode('utf-8'),'utf-8'):
                 print "Data Uploaded"
@@ -107,7 +107,7 @@ class VegProdSpider(scrapy.Spider):
 
     #儲存更新時間        
     def save_update_time(self,update_time):
-        text_file = open(UPDTAE_FILE_LOG,"w")
+        text_file = open(self.UPDTAE_FILE_LOG,"w")
         text_file.write(update_time)
         text_file.close()
         print 'Update time saved.'
