@@ -44,7 +44,7 @@ class VegProdSpider(scrapy.Spider):
     KAFKA_SERVER_PORT = '9092'
     KAFKA_TOPIC = 'vegtable_product_price'
     
-    UPDTAE_FILE_LOG = './update_time.txt'
+    UPDATE_FILE_LOG = '/home/webSpider/vegtable_price_crawler/update_time.txt'
     
     def parse(self, response):
         return scrapy.FormRequest.from_response(
@@ -82,8 +82,8 @@ class VegProdSpider(scrapy.Spider):
 
             for parse_data_date in Selector(text=vegatable_price_table).xpath('//table/tr/td/span[@id = \'ctl00_contentPlaceHolder_lblTransDate\']/text()'):    
     #                時間字串處理
-                convert_date = parse_data_date.extract().split("~")[0].split("/")
-                convert_date[0] = str(int(parse_data_date.extract().split("~")[0].split("/")[0])+1911)
+                convert_date = parse_data_date.extract().split(" ")[0].split("/")
+		convert_date[0] = str(int(parse_data_date.extract().split("~")[0].split("/")[0])+1911)
                 convert_date_str = convert_date[0]+"/"+convert_date[1]+"/"+convert_date[2]+":00:00:00"
                 transcation_date = time.mktime(time.strptime(convert_date_str.replace(" ",""), "%Y/%m/%d:%H:%M:%S"))
         if transcation_date != '':
@@ -93,8 +93,8 @@ class VegProdSpider(scrapy.Spider):
             
     #確認資訊更新時間
     def check_update_time(self, veg_data, transcation_date):
-        if os.path.exists(UPDTAE_FILE_LOG):
-            text_file = codecs.open('update_time.txt', 'r', 'utf-8')
+        if os.path.exists(self.UPDATE_FILE_LOG):
+            text_file = codecs.open(self.UPDATE_FILE_LOG, 'r', 'utf-8')
             if unicode(str(transcation_date),'utf-8') == unicode(text_file.readlines()[0].encode('utf-8'),'utf-8'):
                 print "Data Uploaded"
             else:
@@ -107,7 +107,7 @@ class VegProdSpider(scrapy.Spider):
 
     #儲存更新時間        
     def save_update_time(self,update_time):
-        text_file = open(UPDTAE_FILE_LOG,"w")
+        text_file = open(self.UPDATE_FILE_LOG,"w")
         text_file.write(update_time)
         text_file.close()
         print 'Update time saved.'
