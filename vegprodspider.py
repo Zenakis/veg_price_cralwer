@@ -42,7 +42,7 @@ class VegProdSpider(scrapy.Spider):
     
     KAFKA_SERVER_IP = '59.127.187.54'
     KAFKA_SERVER_PORT = '9092'
-    KAFKA_TOPIC = 'vegtable_product_price'
+    KAFKA_TOPIC = 'vegtable_product_price_test'
     
     UPDTAE_FILE_LOG = './update_time.txt'
     
@@ -82,12 +82,13 @@ class VegProdSpider(scrapy.Spider):
 
             for parse_data_date in Selector(text=vegatable_price_table).xpath('//table/tr/td/span[@id = \'ctl00_contentPlaceHolder_lblTransDate\']/text()'):    
     #                時間字串處理
-                convert_date = parse_data_date.extract().split("~")[0].split("/")
+                convert_date = parse_data_date.extract().split(" ")[0].split("/")
                 convert_date[0] = str(int(parse_data_date.extract().split("~")[0].split("/")[0])+1911)
                 convert_date_str = convert_date[0]+"/"+convert_date[1]+"/"+convert_date[2]+":00:00:00"
                 transcation_date = time.mktime(time.strptime(convert_date_str.replace(" ",""), "%Y/%m/%d:%H:%M:%S"))
         if transcation_date != '':
-            self.check_update_time(veg_data, transcation_date)
+#            self.check_update_time(veg_data, transcation_date)
+            self.convert_vegtable_data(veg_data, transcation_date)
         else:
             print "No Data To Crawler"
             
