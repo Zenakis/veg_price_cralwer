@@ -44,7 +44,7 @@ class VegProdSpider(scrapy.Spider):
     KAFKA_SERVER_PORT = '9092'
     KAFKA_TOPIC = 'vegtable_product_price_test'
     
-    UPDTAE_FILE_LOG = './update_time.txt'
+    UPDATE_FILE_LOG = '/home/webSpider/vegtable_price_crawler/update_time.txt'
     
     def parse(self, response):
         return scrapy.FormRequest.from_response(
@@ -94,8 +94,8 @@ class VegProdSpider(scrapy.Spider):
             
     #確認資訊更新時間
     def check_update_time(self, veg_data, transcation_date):
-        if os.path.exists(self.UPDTAE_FILE_LOG):
-            text_file = codecs.open('update_time.txt', 'r', 'utf-8')
+        if os.path.exists(self.UPDATE_FILE_LOG):
+            text_file = codecs.open(self.UPDATE_FILE_LOG, 'r', 'utf-8')
             if unicode(str(transcation_date),'utf-8') == unicode(text_file.readlines()[0].encode('utf-8'),'utf-8'):
                 print "Data Uploaded"
             else:
@@ -108,7 +108,7 @@ class VegProdSpider(scrapy.Spider):
 
     #儲存更新時間        
     def save_update_time(self,update_time):
-        text_file = open(self.UPDTAE_FILE_LOG,"w")
+        text_file = open(self.UPDATE_FILE_LOG,"w")
         text_file.write(update_time)
         text_file.close()
         print 'Update time saved.'
