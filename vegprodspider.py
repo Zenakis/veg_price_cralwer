@@ -42,7 +42,7 @@ class VegProdSpider(scrapy.Spider):
     
     KAFKA_SERVER_IP = '59.127.187.54'
     KAFKA_SERVER_PORT = '9092'
-    KAFKA_TOPIC = 'vegtable_product_price_test'
+    KAFKA_TOPIC = 'vegtable_product_price'
     
     UPDATE_FILE_LOG = '/home/webSpider/vegtable_price_crawler/update_time.txt'
     
