@@ -88,7 +88,7 @@ class VegProdSpider(scrapy.Spider):
                 convert_date_str = convert_date[0]+"/"+convert_date[1]+"/"+convert_date[2]+":00:00:00"
                 day_of_transcation = time.mktime(time.strptime(convert_date_str.replace(" ",""), "%Y/%m/%d:%H:%M:%S"))
         if day_of_transcation != '':
-            self.convert_vegtable_data(veg_data, day_of_transcation)
+            self.convert_vegtable_data(veg_data, int(day_of_transcation))
         else:
             print "No Data To Crawler"
 
@@ -220,12 +220,13 @@ class VegProdSpider(scrapy.Spider):
 #       最後市場的資料整合
         marketList.append(Market(market_Id_Reocrd, market_Name_Record, vegtableProductPriceList))
         updated = time.time()
-        self.sendMsgToKafka(VegtableProductJson(marketList, int(day_of_transcation), int(updated)))
+
+        self.sendMsgToKafka(VegtableProductJson(marketList, day_of_transcation, int(updated)))
         # self.parse_to_json(VegtableProductJson(marketList, int(day_of_transcation), int(updated)))
 
-    # def parse_to_json(self,vegtable_json_obj):
-        # veg_price_json = json.dumps(vegtable_json_obj, default=self.jdefault , ensure_ascii=False, indent = 4)
-        # print veg_price_json
+    def parse_to_json(self,vegtable_json_obj):
+        veg_price_json = json.dumps(vegtable_json_obj, default=self.jdefault , ensure_ascii=False, indent = 4)
+        print veg_price_json
 
 
     def sendMsgToKafka(self, vegtable_json_obj):
